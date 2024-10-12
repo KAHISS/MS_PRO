@@ -1,4 +1,4 @@
-# Moirgania Sousa <img src="assets/MorganiaSousa.ico" alt="Descrição da imagem" style="width:20%;">
+# Morgania Sousa <img src="assets/MorganiaSousa.ico" alt="Descrição da imagem" style="width:20%;">
 Um sistema personalizado para a design de sombrancelhas Morgania Sousa
 
 ### Features (release 2.5.0)
