@@ -1,0 +1,7 @@
+venv
+dist
+build
+dataBases
+.idea
+__pycache__
+copyDatabase.py
