@@ -69,8 +69,6 @@ class SendMessage:
                         pyautogui.hotkey('shift', 'enter')
                         write(f'*{dayWeek.title()} dia {c[6][0:2]} de {monthYear} às {c[3]}*')
                     else:
-                        write(f'Oi, {c[1].title().split(" ")[0]}. este é o seu próximo agendamento.')
-                        pyautogui.hotkey('shift', 'enter')
                         write(f'*{dayWeek.title()} dia {c[6][0:2]} de {monthYear} às {c[3]}*')
                 pyautogui.press('return')
                 sleep(1)
