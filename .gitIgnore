@@ -6,3 +6,5 @@ dataBases
 __pycache__
 copyDatabase.py
 MS-Pro.spec
+credentials.json
+resources/token.json

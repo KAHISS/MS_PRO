@@ -18,6 +18,9 @@ from barcode import EAN13
 from cv2_collage import create_collage
 import shutil
 import cairosvg
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 
 
 class GeneralFunctions:
@@ -2245,3 +2248,67 @@ class FunctionsOfConfigurations(GeneralFunctions):
 
     def colorPicker(self, widget, color, attribute):
         selectorColor = askcolor()
+
+
+class FunctionsOfIntegrationWithGoogleCalendar(GeneralFunctions):
+
+    def __init__(self):
+        self.cred = None
+        self.service = None
+
+    def getCalendarService(self):
+        # Autenticação usando o arquivo credentials.json
+        self.scope = ['https://www.googleapis.com/auth/calendar']
+        try:
+            # Tente carregar as credenciais salvas anteriormente
+            self.creds = Credentials.from_authorized_user_file('resources/token.json', self.scope)
+        except:
+            # Se não houver credenciais salvas, ou se forem inválidas, inicie o fluxo OAuth
+            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', self.scope)
+            self.creds = flow.run_local_server(port=0)
+
+            # Salve as credenciais para futuras execuções
+            with open('resources/token.json', 'w') as token:
+                token.write(self.creds.to_json())
+
+        # Conectar ao Google Calendar usando as credenciais
+        return build('calendar', 'v3', credentials=self.creds)
+
+    def getEventDay(self):
+        # Definir o início e o fim do dia em UTC
+        start_of_day = datetime(int(datetime.today().year), int(datetime.today().month), int(datetime.today().day), 0, 0, 0).isoformat() + 'Z'
+        end_of_day = datetime(int(datetime.today().year), int(datetime.today().month), int(datetime.today().day), 23, 59, 59).isoformat() + 'Z'
+
+        # Buscar eventos entre start_of_day e end_of_day
+        events_result = self.getCalendarService().events().list(
+            calendarId='primary',
+            timeMin=start_of_day,
+            timeMax=end_of_day,
+            singleEvents=True,
+            orderBy='startTime'
+        ).execute()
+
+        events = events_result.get('items', [])
+
+        informations = []
+
+        if not events:
+            self.message_window(2, 'Sem registro', 'Nenhum agendamento')
+        else:
+            for event in events:
+                informations.append([event[key] for key in ['summary', 'start']])
+            self.register_schedule_google(informations)
+
+    def register_schedule_google(self, infos):
+        for info in infos:
+            name = info[0].split('-')[0].strip()
+            service = info[0].split('-')[1].strip()
+            value = info[0].split('-')[2].strip()
+            time = info[1]['dateTime'][11:16]
+
+            self.dataBases['schedule'].crud(
+                registerScheduling.format(
+                    name.title(), service.upper(), time, self.treating_numbers(value, 1), 'SEM PAGAMENTO',
+                    datetime.today().strftime('%d/%m/%Y'), "Morgania Sousa", datetime.today().strftime('%d/%m/%Y  %H:%M'), 'CÓDIGO INEXISTENTE'
+                )
+            )

@@ -22,7 +22,8 @@ class Aplication(
     FunctionsOfCashManagement,
     FunctionsOfPayment,
     FunctionsOfLogin,
-    FunctionsOfConfigurations
+    FunctionsOfConfigurations,
+    FunctionsOfIntegrationWithGoogleCalendar
 ):
 
     def __init__(self):
@@ -109,6 +110,7 @@ class Aplication(
         self.root.wm_protocol('WM_DELETE_WINDOW', lambda: self.loginWindow.destroy())
         # event bind ============================================
         self.root.bind_all('<Control-b>', lambda e: self.backup_dataBaes())
+        self.root.bind_all('<Control-g>', lambda e: self.getEventDay())
 
         # style notebook
         style = ttk.Style()
