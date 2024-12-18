@@ -10,6 +10,7 @@ from PIL import ImageDraw
 from PIL import ImageFont
 # functions libs ==================================
 import os
+from time import sleep
 import requests
 from datetime import datetime
 from reportlab.lib.pagesizes import A4
@@ -25,14 +26,75 @@ from googleapiclient.discovery import build
 
 class GeneralFunctions:
 
+    def backup_dataBase_cloud(self):
+        try:
+            # making request in the site ========================
+            request = requests.get("https://www.google.com/intl/pt-br/drive/about.html")
+        except Exception:
+            # error in request ===================
+            self.message_window(typem=2, titlein='Backup local', messagein='Foi feito só o backup local, conecte-se a internet para fazer o backup na nuvem')
+            self.backup_dataBase_local()
+        else:
+            # pick directory if origin =========================
+            diretoryCloud = self.dataBases['backup'].searchDatabase("SELECT caminho FROM Load")[0][0]
+            origin = './resources'
+            destiny = os.path.join(diretoryCloud, "MS-Pro/backup/resources")
+            # coping ================================
+            if os.path.exists(destiny):
+                shutil.rmtree(destiny)
+                sleep(1)
+                shutil.copytree(origin, destiny)
+            else:
+                shutil.copytree(origin, destiny)
+            self.backup_dataBase_local()
+
     @staticmethod
-    def backup_dataBaes():
+    def backup_dataBase_local():
         # pick directory if origin =========================
-        origin = 'resources'
-        destiny = filedialog.askdirectory(initialdir='Documentos', title='Selecione aonde salvar o sourceCode') + f'/sourceCode{datetime.today().strftime("%d_%m_%Y %H_%M")}'
+        origin = './resources'
+        destiny = os.path.join(os.path.expanduser("~"), "KonectSys/backup/resources")
         # coping ================================
-        if destiny != '' or destiny is not None:
+        if os.path.exists(destiny):
+            shutil.rmtree(destiny)
             shutil.copytree(origin, destiny)
+        else:
+            shutil.copytree(origin, destiny)
+
+    def loading_database(self):
+        # pick directory if origin =========================
+        origin = os.path.join(os.path.expanduser("~"), "KonectSys/backup/resources")
+        destiny = './resources'
+        # coping ================================
+        if os.path.exists(origin):
+            shutil.rmtree(destiny)
+            shutil.copytree(origin, destiny)
+        self.message_window(1, 'Concluído', messagein=f'Carregamento do backup feito com sucesso')
+
+    def loading_database_cloud(self):
+        try:
+            # making request in the site ========================
+            request = requests.get("https://www.google.com/intl/pt-br/drive/about.html")
+        except Exception:
+            # error in request ===================
+            self.message_window(typem=2, titlein='Backup local', messagein='Foi feito só o carregamento do backup local, conecte-se a internet para fazer o backup na nuvem')
+            self.loading_database()
+        else:
+            # pick directory if origin =========================
+            diretoryCloud = self.dataBases['backup'].searchDatabase("SELECT caminho FROM Load")[0][0]
+            destiny = './resources'
+            origin = os.path.join(diretoryCloud, "MS-Pro/backup/resources")
+            # coping ================================
+            if os.path.exists(destiny):
+                shutil.rmtree(destiny)
+                shutil.copytree(origin, destiny)
+            else:
+                shutil.copytree(origin, destiny)
+
+    def select_diretory_of_cloud(self):
+        # select diretory ==========================
+        diretory = filedialog.askdirectory(title='Escolha o diretório da nuvem')
+        # updating backup
+        self.dataBases['backup'].crud(f'UPDATE Load SET caminho = "{diretory}"')
 
     def insert_treeview_informations(self, treeview, infos, line_color):
         for info in infos:

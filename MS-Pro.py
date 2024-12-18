@@ -34,6 +34,7 @@ class Aplication(
             'informations': DataBase('resources/informações.db'),
             'stock': DataBase('resources/Estoque.db'),
             'cash': DataBase('resources/Caixa.db'),
+            'backup': DataBase('resources/backup.db'),
         }
         self.criptography = Criptography()
         self.bot = SendMessage()
@@ -107,9 +108,10 @@ class Aplication(
         self.root.geometry(f'{self.root.winfo_screenwidth()}x{self.root.winfo_screenheight()}')
         self.root.configure(background='#FFFFFF')
         self.root.iconphoto(False, PhotoImage(file='assets/logo.png'))
-        self.root.wm_protocol('WM_DELETE_WINDOW', lambda: self.loginWindow.destroy())
+        self.root.wm_protocol('WM_DELETE_WINDOW', lambda: [self.backup_dataBase_cloud(), self.loginWindow.destroy()])
         # event bind ============================================
-        self.root.bind_all('<Control-b>', lambda e: self.backup_dataBaes())
+        self.root.bind_all('<Control-b>', lambda e: self.backup_dataBase_cloud())
+        self.root.bind_all('<Control-l>', lambda e: self.loading_database_cloud())
         self.root.bind_all('<Control-g>', lambda e: self.getEventDay())
 
         # style notebook
