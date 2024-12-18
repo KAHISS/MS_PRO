@@ -1,7 +1,7 @@
 # Morgania Sousa <img src="assets/MorganiaSousa.ico" alt="Descrição da imagem" style="width:20%;">
 Um sistema personalizado para a design de sombrancelhas Morgania Sousa
 
-### Features (release 2.5.0)
+### Features
 1. Sistema de login com níveis (Administrador/usuário)
 2. Agenda e gerenciamento de agenda 
 3. Cadastro de clientes, profissionais, informações de estoque, usuários
@@ -10,6 +10,8 @@ Um sistema personalizado para a design de sombrancelhas Morgania Sousa
 6. Gerador de tabelas com relatórios em PDF
 7. Gerador de código de barras
 8. Bot de automação de envio de mensagens por WhatsApp
+9. Integração com o google calendar
+10. Sincronização com google drive
 
 ### DESENVOLVIMENTO
 idealizado e desenvolvido por [KAHISS](https://github.com/KAHISS) desde o front-end até o back-end. Utilizando python como linguagem de programação e o SQLite como banco de dados.
