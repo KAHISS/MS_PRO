@@ -89,6 +89,7 @@ class GeneralFunctions:
                 shutil.copytree(origin, destiny)
             else:
                 shutil.copytree(origin, destiny)
+            self.message_window(typem=1, titlein='Backup carregado', messagein='O backup foi carregado com sucesso!')
 
     def select_diretory_of_cloud(self):
         # select diretory ==========================

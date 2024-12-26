@@ -8,3 +8,5 @@ copyDatabase.py
 MS-Pro.spec
 credentials.json
 resources/token.json
+update.py
+update.spec
