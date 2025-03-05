@@ -18,13 +18,18 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from barcode import EAN13
 from cv2_collage import create_collage
 import shutil
-import cairosvg
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+import stat
 
 
 class GeneralFunctions:
+
+    def remove_readonly(func, path, exc_info):
+        """Força a remoção de arquivos protegidos."""
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
 
     def backup_dataBase_cloud(self):
         try:
@@ -41,7 +46,7 @@ class GeneralFunctions:
             destiny = os.path.join(diretoryCloud, "MS-Pro/backup/resources")
             # coping ================================
             if os.path.exists(destiny):
-                shutil.rmtree(destiny)
+                shutil.rmtree(destiny, onerror=GeneralFunctions.remove_readonly)
                 sleep(1)
                 shutil.copytree(origin, destiny)
             else:
@@ -55,7 +60,7 @@ class GeneralFunctions:
         destiny = os.path.join(os.path.expanduser("~"), "KonectSys/backup/resources")
         # coping ================================
         if os.path.exists(destiny):
-            shutil.rmtree(destiny)
+            shutil.rmtree(destiny, onerror=GeneralFunctions.remove_readonly)
             shutil.copytree(origin, destiny)
         else:
             shutil.copytree(origin, destiny)
@@ -66,7 +71,7 @@ class GeneralFunctions:
         destiny = './resources'
         # coping ================================
         if os.path.exists(origin):
-            shutil.rmtree(destiny)
+            shutil.rmtree(destiny, onerror=GeneralFunctions.remove_readonly)
             shutil.copytree(origin, destiny)
         self.message_window(1, 'Concluído', messagein=f'Carregamento do backup feito com sucesso')
 
@@ -85,7 +90,7 @@ class GeneralFunctions:
             origin = os.path.join(diretoryCloud, "MS-Pro/backup/resources")
             # coping ================================
             if os.path.exists(destiny):
-                shutil.rmtree(destiny)
+                shutil.rmtree(destiny, onerror=GeneralFunctions.remove_readonly)
                 shutil.copytree(origin, destiny)
             else:
                 shutil.copytree(origin, destiny)
@@ -1197,29 +1202,6 @@ class FunctionsOfBarCodeInformations(GeneralFunctions):
         if directory != '':
             directoryCompleted = rf'{directory}/{fileName}'
             code.save(directoryCompleted)
-            # open image for tranform in png and drawing ============================================
-            cairosvg.svg2png(url=directoryCompleted + '.svg', write_to=directoryCompleted + '.png', output_width=523, output_height=280)
-            os.remove(directoryCompleted + '.svg')
-            image = Image.open(directoryCompleted + '.png')
-            # creating new image for paste and writing in the image ===============================
-            new_image = Image.new('RGB', (523, 380), color='white')
-            # calculating coordenades for centralize image in the image ==========================
-            x = (523 - image.width) // 2
-            y = (380 - image.height) // 2
-            new_image.paste(image, (x, y))
-            draw = ImageDraw.Draw(new_image)
-            # setting a font writing ====================================================
-            font = ImageFont.truetype('assets/font.otf', 60)
-            # positioning and drawing text in image ========================================
-            fileNameReplace = fileName.replace('=', ' -> ')
-            largura, altura = new_image.size
-            texto_largura = draw.textlength(fileNameReplace, font)
-            texto_altura = font.size
-            posicao = ((largura - texto_largura) // 2, (altura - texto_altura) // 2 + 145)
-            draw.text(posicao, fileNameReplace, font=font, fill=(196, 154, 31))
-            # saving the image ===========================================================
-            new_image.save(directoryCompleted + '.png')
-            new_image.close()
 
         return [directoryCompleted + '.png', code.get_fullcode()]
 

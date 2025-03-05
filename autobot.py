@@ -41,7 +41,7 @@ class SendMessage:
                 sleep(1.5)
                 pyautogui.press('down')
                 pyautogui.press('enter')
-                pyautogui.click(x=946, y=988)
+                pyautogui.click(x=970, y=988)
 
                 dayWeek = datetime.strptime(c[6], '%d/%m/%Y').strftime('%A')
                 monthYear = datetime.strptime(c[6], '%d/%m/%Y').strftime('%B')
