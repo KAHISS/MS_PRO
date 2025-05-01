@@ -84,7 +84,7 @@ class SendMessage:
                 sleep(1.5)
                 pyautogui.press('down')
                 pyautogui.press('enter')
-                pyautogui.click(x=946, y=988)
+                pyautogui.click(x=970, y=988)
                 sleep(1.5)
                 if '(' in c[1]:
                     nameFormated = c[1].split(")")[0].replace("(", "").title()

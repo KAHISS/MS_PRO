@@ -113,6 +113,7 @@ class Aplication(
         self.root.bind_all('<Control-b>', lambda e: self.backup_dataBase_cloud())
         self.root.bind_all('<Control-l>', lambda e: self.loading_database_cloud())
         self.root.bind_all('<Control-g>', lambda e: self.getEventDay())
+        self.root.bind_all('<Control-d>', lambda e: self.select_diretory_of_cloud())
 
         # style notebook
         style = ttk.Style()
@@ -251,7 +252,6 @@ class Aplication(
         # date -------------
         labelDate = self.labels(self.frameInputsSchedule, 'Data:', 0.02, 0.78, width=0.16)
         self.dateScheduleEntry = self.entry(self.frameInputsSchedule, 0.12, 0.78, 0.159, 0.12, type_entry='date')
-        self.dateScheduleEntry.insert(0, datetime.today().strftime('%d/%m/%Y'))
 
         # professional -------------
         labelProfessional = self.labels(self.frameInputsSchedule, 'Profissional:', 0.34, 0.08, width=0.15)
