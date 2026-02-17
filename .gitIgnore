@@ -10,3 +10,4 @@ credentials.json
 resources/token.json
 update.py
 update.spec
+whatsapp_session/

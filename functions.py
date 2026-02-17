@@ -644,12 +644,10 @@ class FunctionsOfSchedule(GeneralFunctions):
             clientsTreeview = self.pick_informations_treeview(treeview)
             clientsSelection = self.selection_treeview(treeview)
             if len(clientsTreeview) > 0:
-                self.bot.open_whatsapp()
-                self.bot.pause('assets/image_pause.jpg')
-                self.bot.whatsapp(
+                self.bot.send_messages(
                     clientsSelection if len(clientsSelection) > 0 else clientsTreeview,
-                    type_message=type_message,
-                    message=message
+                    type_message,
+                    message
                 )
                 messagebox.showinfo(title='Concluido', message='Mensagens enviadas.')
             else:
