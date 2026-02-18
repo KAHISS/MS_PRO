@@ -3,7 +3,9 @@ from time import sleep
 from datetime import datetime
 import locale
 import os
+from playwright.sync_api import sync_playwright
 
+os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "0"
 class SendMessage:
     def __init__(self):
         # Configuração de locale para datas em PT-BR
@@ -20,6 +22,7 @@ class SendMessage:
             "--disable-infobars",
             "--disable-dev-shm-usage",
             "--disable-blink-features=AutomationControlled",
+            "--start-maximized",
         ]
 
     def send_messages(self, contact_list, type_message, custom_message=''):
@@ -36,9 +39,10 @@ class SendMessage:
             print("Abrindo navegador...")
             context = p.chromium.launch_persistent_context(
                 user_data_dir,
-                headless=False, # Mude para True se não quiser ver o navegador abrindo
+                channel="chrome",
+                headless=False,
                 args=self.browser_args,
-                viewport={"width": 1280, "height": 720}
+                viewport=None
             )
             
             page = context.pages[0] if context.pages else context.new_page()
@@ -135,7 +139,7 @@ class SendMessage:
                     page.keyboard.press("Enter")
                     
                     print(f"Mensagem enviada para {phone_or_search_key}")
-                    sleep(1) # Intervalo de segurança entre contatos
+                    sleep(3) # Intervalo de segurança entre contatos
 
                 except Exception as e:
                     print(f"Erro ao enviar para {c[1]}: {e}")
