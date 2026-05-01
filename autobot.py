@@ -76,7 +76,7 @@ class SendMessage:
 
                     # 1. Clicar na caixa de busca e limpar
                     # O seletor do campo de busca (pode mudar com updates do WA, mas esse é o padrão atual)
-                    search_box = page.wait_for_selector("div[contenteditable='true'][data-tab='3']")
+                    search_box = page.wait_for_selector('input[placeholder="Pesquisar ou começar uma nova conversa"]')
                     search_box.click()
                     search_box.fill(phone_or_search_key)
                     sleep(1.5) # Espera o WhatsApp filtrar
@@ -85,7 +85,7 @@ class SendMessage:
                     page.keyboard.press("Enter")
                     
                     # Espera a área da conversa abrir
-                    sleep(1) # Pequena pausa para garantir renderização da conversa
+                    sleep(2) # Pequena pausa para garantir renderização da conversa
 
                     # 3. Preparar a Saudação e Data (Lógica Original)
                     dayWeek = datetime.strptime(c[6], '%d/%m/%Y').strftime('%A')
